@@ -1,5 +1,6 @@
 package com.springboot.serviceloader.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,16 +18,20 @@ public class DictionaryService {
 
     public static final String NO_DEF_FOUND = "No definition found";
 
+    private final List<Dictionary> dictionaryList = new ArrayList<>();
+
     @Autowired
-    @Qualifier("dictionaryServiceListFactoryBean")
-    Object dictionaries;
+    public DictionaryService(@Qualifier("dictionaryServiceListFactoryBean") Object discoveredDictionaries) {
+        dictionaryList.addAll((List<Dictionary>)discoveredDictionaries);
+    }
 
     public String getDefinition(String word) {
-        Optional<Dictionary> firstNonNullDefinition =  ((List<Dictionary>) dictionaries).stream().filter(p->p.getDefinition(word) != null).findFirst();
+        Optional<Dictionary> firstNonNullDefinition =  dictionaryList   .stream().filter(p->p.getDefinition(word) != null).findFirst();
         if ( firstNonNullDefinition.isPresent() ) {
             return firstNonNullDefinition.get().getDefinition(word);
         } else {
             return NO_DEF_FOUND;
         }
     }
+
 }
