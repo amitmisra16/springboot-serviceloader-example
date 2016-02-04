@@ -1,0 +1,2 @@
+com.springboot.serviceloader.service.impl.ExtendedDictionary
+com.springboot.serviceloader.service.impl.GeneralDictionary
